@@ -1,0 +1,630 @@
+\documentclass[12pt,a4paper]{report}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning}
+
+% Configuration de la page
+\geometry{margin=2.5cm}
+
+% Configuration des liens
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Rapport AissaGoApp},
+    pdfauthor={Équipe de développement},
+}
+
+% Configuration des en-têtes et pieds de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{AissaGoApp}
+\fancyfoot[C]{\thepage}
+
+% Configuration du code
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+}
+
+% Couleurs personnalisées
+\definecolor{brandcolor}{RGB}{63,81,181}
+\definecolor{successcolor}{RGB}{46,204,113}
+\definecolor{warningcolor}{RGB}{255,193,7}
+\definecolor{dangercolor}{RGB}{244,67,54}
+
+% Configuration des titres
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{brandcolor}}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+
+% Début du document
+\begin{document}
+
+% Page de titre
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge\bfseries Rapport Complet du Projet\par}
+    \vspace{1cm}
+    {\LARGE\bfseries AissaGoApp\par}
+    \vspace{0.5cm}
+    {\Large Application de Covoiturage\par}
+    
+    \vspace{2cm}
+    
+    \begin{tcolorbox}[colback=brandcolor!5,colframe=brandcolor,width=0.8\textwidth]
+        \centering
+        \large
+        Développée en Java Swing avec MySQL\\
+        Architecture 3-Tiers\\
+        Interface Moderne et Sécurisée
+    \end{tcolorbox}
+    
+    \vfill
+    
+    {\large
+    \textbf{Version :} 1.0\\
+    \textbf{Date :} 13 décembre 2025\\
+    \textbf{Auteur :} Équipe de développement AissaGoApp
+    }
+    
+\end{titlepage}
+
+% Table des matières
+\tableofcontents
+\newpage
+
+% Chapitre 1
+\chapter{Vue d'ensemble du Projet}
+
+\section{Introduction}
+
+\textbf{AissaGoApp} est une application de covoiturage de bureau développée en Java Swing, permettant de mettre en relation des conducteurs et des passagers pour des trajets partagés.
+
+\section{Objectifs du Projet}
+
+\begin{itemize}[leftmargin=*]
+    \item Faciliter le covoiturage entre utilisateurs
+    \item Offrir une interface moderne et intuitive
+    \item Garantir la sécurité des transactions et des données
+    \item Permettre l'évaluation des conducteurs
+    \item Notifier les utilisateurs des changements importants
+\end{itemize}
+
+\section{Rôles Utilisateurs}
+
+\begin{description}
+    \item[Passagers] Recherche de trajets, réservation de places, paiement, notation des conducteurs
+    \item[Conducteurs] Création de trajets, gestion des réservations, consultation des demandes
+    \item[Administrateurs] Accès global au système (fonctionnalité prévue)
+\end{description}
+
+% Chapitre 2
+\chapter{Architecture du Système}
+
+\section{Architecture 3-Tiers}
+
+L'application suit une architecture 3-tiers stricte avec séparation claire entre :
+
+\begin{itemize}
+    \item \textbf{Couche Présentation} : Interfaces Swing (LoginFrame, RegistrationFrame, Dashboards)
+    \item \textbf{Couche Métier} : Services (UserService, TripService, BookingService)
+    \item \textbf{Couche Données} : DAOs et Base de données MySQL
+\end{itemize}
+
+\section{Structure des Packages}
+
+\begin{lstlisting}[language=bash, caption=Structure du projet]
+src/
+├── dao/              # Data Access Objects
+│   ├── DBConnection.java
+│   ├── UserDAO.java
+│   ├── TripDAO.java
+│   ├── BookingDAO.java
+│   ├── RatingDAO.java
+│   └── NotificationDAO.java
+├── model/            # Entités métier
+│   ├── User.java
+│   ├── Trip.java
+│   ├── Booking.java
+│   ├── Rating.java
+│   └── Notification.java
+├── service/          # Logique métier
+│   ├── UserService.java
+│   ├── TripService.java
+│   └── BookingService.java
+├── view/             # Interfaces utilisateur
+│   ├── LoginFrame.java
+│   ├── RegistrationFrame.java
+│   ├── PassengerDashboard.java
+│   ├── DriverDashboard.java
+│   ├── SearchTripPanel.java
+│   ├── CreateTripPanel.java
+│   ├── PassengerBookingsPanel.java
+│   ├── DriverTripsPanel.java
+│   ├── PaymentDialog.java
+│   ├── RatingDialog.java
+│   └── ProfileDialog.java
+└── util/             # Utilitaires
+    └── PasswordUtils.java
+\end{lstlisting}
+
+% Chapitre 3
+\chapter{Modèle de Classes}
+
+\section{Entités Principales}
+
+\subsection{User (Utilisateur)}
+
+\begin{tcolorbox}[colback=blue!5,colframe=blue!75!black,title=Classe User]
+\textbf{Attributs :}
+\begin{itemize}[noitemsep]
+    \item userId : int
+    \item name : String
+    \item email : String
+    \item password : String (haché)
+    \item phoneNumber : String
+    \item gender : String
+    \item role : String (PASSENGER/DRIVER)
+    \item dateOfBirth : LocalDate
+    \item avatarPath : String
+    \item backgroundPath : String
+    \item vehicleModel : String
+    \item vehiclePlate : String
+    \item averageRating : double
+    \item totalTrips : int
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Trip (Trajet)}
+
+\begin{tcolorbox}[colback=green!5,colframe=green!75!black,title=Classe Trip]
+\textbf{Attributs :}
+\begin{itemize}[noitemsep]
+    \item tripId : int
+    \item driverId : int
+    \item origin : String
+    \item destination : String
+    \item date : LocalDate
+    \item time : LocalTime
+    \item price : double
+    \item seatsAvailable : int
+    \item description : String
+    \item status : String
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Booking (Réservation)}
+
+\begin{tcolorbox}[colback=orange!5,colframe=orange!75!black,title=Classe Booking]
+\textbf{Attributs :}
+\begin{itemize}[noitemsep]
+    \item bookingId : int
+    \item tripId : int
+    \item passengerId : int
+    \item seatsBooked : int
+    \item paymentStatus : String
+    \item bookingStatus : String
+    \item bookingDate : Timestamp
+    \item tripDetails : Trip
+    \item driverDetails : User
+    \item passengerDetails : User
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Rating (Notation)}
+
+\begin{tcolorbox}[colback=yellow!5,colframe=yellow!75!black,title=Classe Rating]
+\textbf{Attributs :}
+\begin{itemize}[noitemsep]
+    \item ratingId : int
+    \item ratedUserId : int
+    \item raterUserId : int
+    \item score : int (1-5)
+    \item comment : String
+    \item createdAt : Timestamp
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Notification}
+
+\begin{tcolorbox}[colback=purple!5,colframe=purple!75!black,title=Classe Notification]
+\textbf{Attributs :}
+\begin{itemize}[noitemsep]
+    \item notificationId : int
+    \item userId : int
+    \item message : String
+    \item isRead : boolean
+    \item createdAt : Timestamp
+\end{itemize}
+\end{tcolorbox}
+
+\section{Relations entre Entités}
+
+\begin{itemize}
+    \item Un \textbf{User} (conducteur) peut proposer plusieurs \textbf{Trips}
+    \item Un \textbf{User} (passager) peut effectuer plusieurs \textbf{Bookings}
+    \item Un \textbf{Trip} peut contenir plusieurs \textbf{Bookings}
+    \item Un \textbf{User} peut donner et recevoir plusieurs \textbf{Ratings}
+    \item Un \textbf{User} peut recevoir plusieurs \textbf{Notifications}
+\end{itemize}
+
+% Chapitre 4
+\chapter{Modèle Relationnel}
+
+\section{Tables Principales}
+
+\begin{longtable}{|l|l|p{6cm}|}
+\hline
+\textbf{Table} & \textbf{Champ} & \textbf{Description} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Table} & \textbf{Champ} & \textbf{Description} \\
+\hline
+\endhead
+
+Users & user\_id (PK) & Identifiant unique auto-incrémenté \\
+ & name & Nom complet de l'utilisateur \\
+ & email (UK) & Email unique \\
+ & password & Mot de passe haché (SHA-256) \\
+ & phone\_number & Numéro de téléphone \\
+ & gender & Sexe (Male/Female) \\
+ & role & Rôle (PASSENGER/DRIVER) \\
+ & date\_of\_birth & Date de naissance \\
+ & vehicle\_model & Modèle du véhicule (conducteurs) \\
+ & vehicle\_plate & Plaque d'immatriculation \\
+\hline
+
+Trips\_Offered & trip\_id (PK) & Identifiant unique du trajet \\
+ & driver\_id (FK) & Référence vers Users \\
+ & origin & Ville de départ \\
+ & destination & Ville d'arrivée \\
+ & trip\_date & Date du trajet \\
+ & trip\_time & Heure du trajet \\
+ & price & Prix par place \\
+ & seats\_available & Nombre de places disponibles \\
+ & description & Description du trajet \\
+ & status & Statut (AVAILABLE/COMPLETED/CANCELLED) \\
+\hline
+
+Bookings & booking\_id (PK) & Identifiant unique de la réservation \\
+ & trip\_id (FK) & Référence vers Trips\_Offered \\
+ & passenger\_id (FK) & Référence vers Users \\
+ & seats\_booked & Nombre de places réservées \\
+ & payment\_status & Statut paiement (PENDING/PAID) \\
+ & booking\_status & Statut réservation (PENDING/ACCEPTED/REJECTED) \\
+ & booking\_date & Date de la réservation \\
+\hline
+
+Ratings & rating\_id (PK) & Identifiant unique de la notation \\
+ & rated\_user\_id (FK) & Utilisateur noté (conducteur) \\
+ & rater\_user\_id (FK) & Utilisateur notant (passager) \\
+ & score & Note de 1 à 5 \\
+ & comment & Commentaire optionnel \\
+ & created\_at & Date de création \\
+\hline
+
+Notifications & notification\_id (PK) & Identifiant unique \\
+ & user\_id (FK) & Destinataire de la notification \\
+ & message & Contenu du message \\
+ & is\_read & Indicateur de lecture \\
+ & created\_at & Date de création \\
+\hline
+
+\caption{Structure de la base de données}
+\end{longtable}
+
+\section{Contraintes et Index}
+
+\begin{itemize}
+    \item \textbf{Clés primaires} : Auto-incrémentées pour toutes les tables
+    \item \textbf{Clés étrangères} : ON DELETE CASCADE pour maintenir l'intégrité
+    \item \textbf{Contraintes} :
+    \begin{itemize}
+        \item Email unique dans Users
+        \item Score entre 1 et 5 dans Ratings
+        \item Statuts énumérés pour payment\_status, booking\_status, trip\_status
+    \end{itemize}
+\end{itemize}
+
+% Chapitre 5
+\chapter{Détails Techniques}
+
+\section{Technologies Utilisées}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Composant} & \textbf{Technologie} & \textbf{Version} \\
+\hline
+Langage & Java & JDK 21 \\
+Interface Graphique & Swing & - \\
+Bibliothèque UI & FlatLaf & Dernière \\
+Base de Données & MySQL & 8.0+ \\
+Connecteur DB & JDBC & MySQL Connector \\
+Sécurité & SHA-256 & Java Security \\
+\hline
+\end{tabular}
+\caption{Stack technologique}
+\end{table}
+
+\section{Patterns de Conception}
+
+\begin{description}
+    \item[DAO (Data Access Object)] Séparation de la logique d'accès aux données
+    \item[MVC (Model-View-Controller)] Organisation en 3 tiers
+    \item[Singleton] Pour la connexion à la base de données
+    \item[Factory] Pour la création des services
+\end{description}
+
+\section{Sécurité}
+
+\begin{itemize}
+    \item \textbf{Hachage des mots de passe} : SHA-256 via PasswordUtils
+    \item \textbf{Validation des entrées} : Côté client et serveur
+    \item \textbf{Gestion des sessions} : Objet User en mémoire
+    \item \textbf{Prévention SQL Injection} : Utilisation de PreparedStatement
+\end{itemize}
+
+% Chapitre 6
+\chapter{Fonctionnalités Détaillées}
+
+\section{Authentification et Inscription}
+
+\subsection{LoginFrame}
+\begin{itemize}
+    \item Interface moderne en split-view
+    \item Branding à gauche, formulaire à droite
+    \item Validation des identifiants avec mot de passe haché
+    \item Redirection selon le rôle (Passager/Conducteur)
+\end{itemize}
+
+\subsection{RegistrationFrame}
+\begin{itemize}
+    \item Interface centrée sur fond gris clair
+    \item Processus en 2 étapes (CardLayout)
+    \item Étape 1 : Informations personnelles
+    \item Étape 2 : Informations véhicule (si conducteur)
+    \item Validation des champs et confirmation de mot de passe
+\end{itemize}
+
+\section{Fonctionnalités Passager}
+
+\subsection{Recherche de Trajets}
+\begin{itemize}
+    \item Filtres : Origine, Destination, Date
+    \item Affichage en cartes modernes
+    \item Informations : Prix, places disponibles, description
+    \item Indication "Complet" si aucune place disponible
+\end{itemize}
+
+\subsection{Réservation}
+\begin{itemize}
+    \item Sélection du nombre de places
+    \item Statuts : PENDING, ACCEPTED, REJECTED
+    \item Vérification de disponibilité en temps réel
+\end{itemize}
+
+\subsection{Paiement}
+\begin{itemize}
+    \item Interface professionnelle de carte bancaire
+    \item Simulation de paiement sécurisé
+    \item Mise à jour du statut à "PAID"
+    \item Activation de la fonction de notation
+\end{itemize}
+
+\subsection{Notation des Conducteurs}
+\begin{itemize}
+    \item Note de 1 à 5 étoiles
+    \item Commentaire optionnel
+    \item Disponible après paiement
+    \item Stockage permanent dans la base
+\end{itemize}
+
+\section{Fonctionnalités Conducteur}
+
+\subsection{Création de Trajets}
+\begin{itemize}
+    \item Formulaire complet : Origine, Destination, Date, Heure
+    \item Prix, Nombre de places, Description
+    \item Statut initial : AVAILABLE
+\end{itemize}
+
+\subsection{Gestion des Trajets}
+\begin{itemize}
+    \item Affichage en cartes modernes
+    \item Actions : Terminer, Supprimer
+    \item Suppression avec notification automatique aux passagers
+\end{itemize}
+
+\subsection{Gestion des Réservations}
+\begin{itemize}
+    \item Liste des demandes de réservation
+    \item Actions : Accepter, Rejeter
+    \item Mise à jour automatique des places disponibles
+\end{itemize}
+
+\section{Système de Notifications}
+
+\begin{itemize}
+    \item Notifications automatiques lors de l'annulation d'un trajet
+    \item Récupération de tous les passagers concernés
+    \item Message personnalisé avec détails du trajet
+    \item Stockage dans la table Notifications
+    \item Indicateur de lecture (is\_read)
+\end{itemize}
+
+% Chapitre 7
+\chapter{Interface Utilisateur}
+
+\section{Design System}
+
+\subsection{Palette de Couleurs}
+
+\begin{itemize}
+    \item \textcolor{brandcolor}{\textbf{Brand Color}} : \#3F51B5 (Indigo)
+    \item \textcolor{successcolor}{\textbf{Success}} : \#2ECC71 (Vert)
+    \item \textcolor{warningcolor}{\textbf{Warning}} : \#FFC107 (Ambre)
+    \item \textcolor{dangercolor}{\textbf{Danger}} : \#F44336 (Rouge)
+    \item \textbf{Background} : \#F0F2F5 (Gris clair)
+\end{itemize}
+
+\subsection{Typographie}
+
+\begin{itemize}
+    \item Police principale : Segoe UI
+    \item Titres : Bold, 18-26px
+    \item Corps : Regular, 13-14px
+    \item Labels : Bold, 12-13px
+\end{itemize}
+
+\subsection{Composants}
+
+\begin{itemize}
+    \item Boutons : Arrondis, padding généreux, curseur pointer
+    \item Champs : Bordure grise, padding interne
+    \item Cartes : Fond blanc, bordure légère, ombre subtile
+\end{itemize}
+
+\section{Écrans Principaux}
+
+\begin{enumerate}
+    \item \textbf{LoginFrame} : Split-view avec branding gauche, formulaire droite
+    \item \textbf{RegistrationFrame} : Carte centrée sur fond gris, formulaire multi-étapes
+    \item \textbf{PassengerDashboard} : Navigation latérale, panneau central dynamique
+    \item \textbf{SearchTripPanel} : Grille de cartes de trajets avec filtres en haut
+    \item \textbf{PaymentDialog} : Formulaire de carte bancaire professionnel
+    \item \textbf{DriverTripsPanel} : Liste de cartes avec actions (Terminer, Supprimer)
+\end{enumerate}
+
+% Chapitre 8
+\chapter{Tests et Validation}
+
+\section{Tests Fonctionnels}
+
+\begin{itemize}[label=\checkmark]
+    \item Inscription et connexion
+    \item Recherche de trajets avec filtres
+    \item Réservation avec vérification de places
+    \item Acceptation/Rejet de réservations
+    \item Paiement simulé
+    \item Notation des conducteurs
+    \item Notifications d'annulation
+\end{itemize}
+
+\section{Validation de Sécurité}
+
+\begin{itemize}[label=\checkmark]
+    \item Mots de passe hachés (SHA-256)
+    \item Requêtes préparées (PreparedStatement)
+    \item Validation des entrées utilisateur
+    \item Gestion des erreurs SQL
+\end{itemize}
+
+% Chapitre 9
+\chapter{Installation et Déploiement}
+
+\section{Prérequis}
+
+\begin{itemize}
+    \item JDK 21 ou supérieur
+    \item MySQL 8.0 ou supérieur
+    \item IDE Java (Eclipse, IntelliJ IDEA, NetBeans)
+\end{itemize}
+
+\section{Configuration}
+
+\subsection{Base de données}
+
+\begin{lstlisting}[language=SQL, caption=Création de la base de données]
+CREATE DATABASE transport_db;
+USE transport_db;
+SOURCE database.sql;
+\end{lstlisting}
+
+\subsection{Configuration JDBC}
+
+Modifier \texttt{DBConnection.java} :
+\begin{itemize}
+    \item URL : \texttt{jdbc:mysql://localhost:3306/transport\_db}
+    \item User : \texttt{root}
+    \item Password : (votre mot de passe)
+\end{itemize}
+
+\subsection{Compilation et Exécution}
+
+\begin{lstlisting}[language=bash, caption=Commandes de compilation]
+javac -d bin src/**/*.java
+java -cp bin view.LoginFrame
+\end{lstlisting}
+
+% Chapitre 10
+\chapter{Évolutions Futures}
+
+\section{Fonctionnalités Prévues}
+
+\begin{itemize}
+    \item Messagerie entre passagers et conducteurs
+    \item Historique complet des trajets
+    \item Statistiques pour les conducteurs
+    \item Système de points de fidélité
+    \item Intégration de cartes géographiques
+    \item Application mobile (Android/iOS)
+\end{itemize}
+
+\section{Améliorations Techniques}
+
+\begin{itemize}
+    \item Migration vers bcrypt pour le hachage
+    \item Mise en cache des données fréquentes
+    \item API REST pour architecture client-serveur
+    \item Tests unitaires et d'intégration
+    \item Documentation JavaDoc complète
+\end{itemize}
+
+% Chapitre 11
+\chapter{Conclusion}
+
+\textbf{AissaGoApp} est une application de covoiturage complète et moderne, offrant une expérience utilisateur fluide et sécurisée. L'architecture 3-tiers garantit la maintenabilité et l'évolutivité du système. Les fonctionnalités de réservation, paiement, notation et notification répondent aux besoins essentiels d'une plateforme de covoiturage.
+
+Le projet démontre une maîtrise des concepts de programmation orientée objet, des patterns de conception, de la gestion de bases de données relationnelles, et du développement d'interfaces graphiques modernes avec Java Swing.
+
+\vspace{1cm}
+
+\begin{center}
+\begin{tcolorbox}[colback=brandcolor!10,colframe=brandcolor,width=0.8\textwidth]
+\centering
+\textbf{Version :} 1.0\\
+\textbf{Date :} 13 décembre 2025\\
+\textbf{Auteur :} Équipe de développement AissaGoApp
+\end{tcolorbox}
+\end{center}
+
+\end{document}
