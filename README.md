@@ -1,3 +1,8 @@
+<!-- ===== BANNER ===== -->
+<p align="center">
+  <img src="images/road_companion_banner.png" alt="Road-Companion Banner" width="100%"/>
+</p>
+
 <p align="center">
   <img src="images/logoapp.avif" alt="Road-Companion Logo" width="120"/>
 </p>
@@ -24,11 +29,15 @@
 
 ## 📖 About the Project
 
+<img align="right" src="images/reze_character.png" alt="Reze — Project Mascot" width="260"/>
+
 **Road-Companion** is a full-featured desktop carpooling platform built entirely in Java. It connects *drivers* who have empty seats with *passengers* traveling the same route — reducing travel costs, cutting fuel expenses, and easing traffic congestion.
 
 Designed as a complete academic project for the **University of Béjaïa (2024–2025)**, it demonstrates real-world MVC architecture, multi-role authentication, database-driven persistence, and a polished modern UI.
 
 > 智能拼车平台 — Road-Companion 是一个完整的桌面拼车平台，完全用 Java 构建。它将有空座位的司机与同路乘客连接起来，旨在降低出行成本、分摊燃油费用并缓解交通拥堵。本项目作为贝贾亚大学 2024–2025 学年完整学术项目，展示了真实的 MVC 架构、多角色认证、数据库持久化和精致的现代 UI。
+
+<br clear="right"/>
 
 ---
 
