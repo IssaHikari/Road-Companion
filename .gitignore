@@ -1,0 +1,22 @@
+# Build and output directories
+build/
+bin/
+dist/
+out/
+
+# IDE configurations
+.idea/
+*.iml
+nbproject/private/
+
+# Local database or environments if any
+.env
+.env.local
+
+# Compiled Java class files (in case they are compiled outside build/)
+*.class
+
+# OS temporary files
+Thumbs.db
+desktop.ini
+.DS_Store

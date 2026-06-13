@@ -62,7 +62,7 @@ public class User {
     }
 
     public boolean isIsAdmin() {
-        return isAdmin;
+        return isAdmin || "ADMIN".equalsIgnoreCase(role);
     }
 
     public String getAvatarPath() {

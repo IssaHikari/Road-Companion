@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.List;
 
 import view.settings.*;
+import view.LoginFrame;
 
 public class AdminDashboard extends JFrame {
 
@@ -144,7 +145,10 @@ public class AdminDashboard extends JFrame {
         logoutBtn.setForeground(Color.WHITE);
         logoutBtn.setFocusPainted(false);
         logoutBtn.setMaximumSize(new Dimension(220, 45));
-        logoutBtn.addActionListener(e -> dispose());
+        logoutBtn.addActionListener(e -> {
+            new LoginFrame().setVisible(true);
+            dispose();
+        });
 
         sidebar.add(logoutBtn);
         sidebar.add(Box.createVerticalStrut(30));

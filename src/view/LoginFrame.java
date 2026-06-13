@@ -2,6 +2,7 @@ package view;
 
 import service.UserService;
 import model.User;
+import view.admin.AdminDashboard;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -241,7 +242,11 @@ public class LoginFrame extends JFrame {
                 // JOptionPane.showMessageDialog(this, "Bienvenue " + user.getName(), "Succès",
                 // JOptionPane.INFORMATION_MESSAGE);
 
-                new MainFrame(user).setVisible(true);
+                if (user.isIsAdmin()) {
+                    new AdminDashboard(user).setVisible(true);
+                } else {
+                    new MainFrame(user).setVisible(true);
+                }
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Email ou mot de passe incorrect.", "Erreur",
